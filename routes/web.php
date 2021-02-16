@@ -17,6 +17,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/mongodb', function () {
+    return \App\Models\Author::whereHas('posts', function ($query) {
+        $query->where('title', 'like', "%He must%");
+    })->with(['posts' => function ($query) {
+        $query->select(['id', 'title', 'body', 'author_id']);
+    }])->get();
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
